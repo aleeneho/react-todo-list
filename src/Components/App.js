@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "./Header";
-import Tasks from "./Tasks";
+import Task from "./Task";
 import NewTaskForm from "./NewTaskForm";
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
     <div className="container mx-auto">
       <Header />
       <NewTaskForm setTasks={setTasks} />
-      <Tasks tasks={tasks} setTasks={setTasks} />
+      <Task task={tasks} setTasks={setTasks} />
     </div>
   );
 }

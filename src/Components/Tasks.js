@@ -1,45 +1,63 @@
-import { useMemo } from "react";
-import TaskColumn from "./TaskColumn";
+import {
+  FaCheck,
+  FaHourglass,
+  FaPencilAlt,
+  FaTimesCircle,
+} from "react-icons/fa";
 
-function Tasks({ tasks, setTasks }) {
-  const pendingTasks = useMemo(
-    () => tasks.filter((task) => task.status === "pending"),
-    [tasks]
-  );
+function Task({ task, setTasks }) {
+  const updateStatus = (taskId, status) => {
+    setTasks((prev) => {
+      return prev.map((task) => {
+        if (task.id === taskId) {
+          task.status = status;
+        }
 
-  const doingTasks = useMemo(
-    () => tasks.filter((task) => task.status === "doing"),
-    [tasks]
-  );
-  const doneTasks = useMemo(
-    () => tasks.filter((task) => task.status === "done"),
-    [tasks]
-  );
+        return task;
+      });
+    });
+  };
+
+  const deleteTask = (id) => {
+    setTasks((prev) => prev.filter((task) => task.id !== id));
+  };
 
   return (
-    <div className="bg-white p-3 my-5 border rounded">
-      <div className="flex justify-between">
-        <TaskColumn
-          tasks={pendingTasks}
-          setTasks={setTasks}
-          label="Pending"
-          color="neutral"
-        />
-        <TaskColumn
-          tasks={doingTasks}
-          setTasks={setTasks}
-          label="In Progress"
-          color="slate"
-        />
-        <TaskColumn
-          tasks={doneTasks}
-          setTasks={setTasks}
-          label="Done"
-          color="emerald"
-        />
+    <div
+      key={task.id}
+      className="p-2 mb-1 bg-white border flex items-center justify-between relative group"
+    >
+      {task.title}
+
+      <div className="flex items-center">
+        {task.status !== "pending" && (
+          <FaHourglass
+            onClick={() => updateStatus(task.id, "pending")}
+            className="mx-1 hover:cursor-pointer"
+          />
+        )}
+
+        {task.status !== "doing" && (
+          <FaPencilAlt
+            onClick={() => updateStatus(task.id, "doing")}
+            className="mx-1 hover:cursor-pointer"
+          />
+        )}
+
+        {task.status !== "done" && (
+          <FaCheck
+            onClick={() => updateStatus(task.id, "done")}
+            className="mx-1 hover:cursor-pointer"
+          />
+        )}
       </div>
+
+      <FaTimesCircle
+        onClick={(e) => deleteTask(task.id)}
+        className="absolute text-red-500 -top-1 -right-1 opacity-0 group-hover:opacity-100 hover:cursor-pointer hover:scale-110 transition"
+      />
     </div>
   );
 }
 
-export default Tasks;
+export default Task;
